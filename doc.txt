@@ -1,0 +1,48 @@
+Créer une migration : symfony console make:migration
+Checker le status de nos migrations : symfony console doctrine:migrations:status
+Lancer une migration : symfony console doctrine:migrations:migrate
+
+Créer une base de données :
+php bin/console doctrine:database:create
+
+Installer doctrine :
+composer require symfony/orm-pack
+
+Entités :
+composer require symfony/maker-bundle --dev
+créer une entité : symfony console make:entity
+
+Migrations :
+Créer une migration:
+symfony console make:migration
+
+Exécuter une migration : 
+symfony console doctrine:migrations:migrate
+
+Installation des fixtures :
+composer require --dev doctrine/doctrine-fixtures-bundle
+Charger les fixtures :
+symfony console d:f:l
+
+créer un controller :
+php bin/console make:controller
+composer require symfony/serializer-pack
+
+Gérer les exceptions :
+php bin/console make:subscriber
+
+Validator : 
+composer require symfony/validator doctrine/annotations
+
+Authentification lexik :
+composer require security
+composer require lexik/jwt-authentication-bundle
+
+Générer les clés privée et public :
+php bin/console lexik:jwt:generate-keypair
+
+Hasher un mdp :
+php bin/console security:hash-password
+
+Nelmio pour la création, la gestion et la doc des api:
+composer require nelmio/api-doc-bundle
