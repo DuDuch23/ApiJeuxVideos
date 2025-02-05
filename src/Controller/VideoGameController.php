@@ -9,9 +9,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 #[Route('api/', name: 'api_')]
 class VideoGameController extends AbstractController
 {
+    #[Route('login', name: 'api_login', methods: ['POST'])]
+    public function login(AuthenticationUtils $authenticationUtils): JsonResponse
+    {
+        return new JsonResponse(['message' => 'Login successful'], 200);
+    }
+
     #[Route('videogame', name: 'video_game', methods: ['GET'])]
     public function getVideogame(VideoGameRepository $videoGameRepository): JsonResponse
     {

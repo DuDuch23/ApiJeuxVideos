@@ -1,0 +1,55 @@
+TYPE DE BLESSURE(id_type_blessure, title)
+primaire: id_type_blessure
+
+SOLDAT(id_soldat, nom, prenom, date de naissance)
+primaire: id_soldat
+
+BATAILLE(id_bataille, lieu, date de debut, date de fin)
+primaire: id_bataille
+
+GRADE (id_grade, nom)
+primaire : id_grade
+
+UNITE DE RATTACHEMENT(id_rattachement, date)
+primaire: id_rattachement
+
+BLESSURE(id_blessure, lieu, date, id_type, id_bataille, id_soldat)
+primaire: id_blessure
+étrangère de TYPE DE BLESSURE : id_type
+étrangère de BATAILLE : id_bataille
+étrangère de SOLDAT : id_soldat
+
+APPARTENIR(id_soldat, id_rattachement)
+primaire: id_soldat
+primaire: id_rattachement
+étrangère de SOLDAT : id_soldat
+étrangère de UNITE DE RATTACHEMENT : id_rattachement
+
+AVOIR(id_soldat, id_grade)
+primaire: id_soldat
+primaire: id_rattachement
+étrangère de SOLDAT : id_soldat
+étrangère de GRADE : id_grade
+
+
+BATIMENT(id_bat, nom_bat)
+clé primaire : id_bat
+
+SALLE(id_salle, id_bat, libelle_salle)
+clé primaire : id_bat, id_salle
+
+NIVEAU(id_niveau, libelle_niveau)
+
+MATIERE(id_matiere, libelle_matiere)
+
+ELEVE(id_eleve, ..., id_niveau)
+clé primaire : id_eleve
+étrangère de NIVEAU : id_niveau
+
+ADULTE(id_adulte, nom_adulte, prenom_adulte, tel_interne, grade, type_adulte, id_adulte)
+clé primaire : id_adulte
+étrangère de ADULTE : id_adulte
+
+ENSEIGNE(id_adulte, code_matiere)
+
+ETUDIER(id_niveau, id_salle, id_adulte, heure debut, heure fin)
