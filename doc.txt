@@ -38,11 +38,71 @@ Authentification lexik :
 composer require security
 composer require lexik/jwt-authentication-bundle
 
-Générer les clés privée et public :
-php bin/console lexik:jwt:generate-keypair
-
 Hasher un mdp :
 php bin/console security:hash-password
 
 Nelmio pour la création, la gestion et la doc des api:
 composer require nelmio/api-doc-bundle
+
+-- IMPORTANT
+générer ses clés privée et public :
+php bin/console lexik:jwt:generate-keypair
+
+Se connecter sur postman :
+- Méthode = POST,
+- Authorization = No Auth
+- Body -> raw :
+{
+    "username": "email",
+    "password": "your_password"
+}
+
+-> Obtention d'un token
+
+
+----
+----
+
+
+Récupérer les jeux vidéos :
+- Lien : https://127.0.0.1:8000/api/videogame
+- Méthode = GET,
+- Authorization = Bearer Token (renseigner le token obtenu précédemment)
+
+-> Obtention des jeux vidéos
+
+
+----
+----
+
+
+Récupérer les catégories :
+- Lien : https://127.0.0.1:8000/api/category
+- Méthode = GET,
+- Authorization = Bearer Token (renseigner le token obtenu précédemment)
+
+-> Obtention des catégories
+
+
+----
+----
+
+
+Récupérer les éditeurs :
+- Lien : https://127.0.0.1:8000/api/editor
+- Méthode = GET,
+- Authorization = Bearer Token (renseigner le token obtenu précédemment)
+
+-> Obtention des éditeurs
+
+
+----
+----
+
+
+Récupérer les jeux vidéos :
+- Lien : https://127.0.0.1:8000/api/videogame
+- Méthode = GET,
+- Authorization = Bearer Token (renseigner le token obtenu précédemment)
+
+-> Obtention des jeux vidéos

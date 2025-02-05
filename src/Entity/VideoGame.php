@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\VideoGameRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: VideoGameRepository::class)]
 #[ApiResource]
@@ -14,27 +15,28 @@ class VideoGame
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['video_game:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['video_game:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeImmutable $releaseDate = null;
+    #[Groups(['video_game:read'])]
+    private ?\DateTime $releaseDate = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['video_game:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
+    private ?Category $id_category = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Editor $editor = null;
-
-    #[ORM\ManyToOne(inversedBy: 'videogames')]
-    private ?User $user = null;
+    private ?Editor $id_editor = null;
 
     public function getId(): ?int
     {
@@ -53,12 +55,12 @@ class VideoGame
         return $this;
     }
 
-    public function getReleaseDate(): ?\DateTimeImmutable
+    public function getReleaseDate(): ?\DateTime
     {
         return $this->releaseDate;
     }
 
-    public function setReleaseDate(\DateTimeImmutable $releaseDate): static
+    public function setReleaseDate(\DateTime $releaseDate): static
     {
         $this->releaseDate = $releaseDate;
 
@@ -79,36 +81,24 @@ class VideoGame
 
     public function getIdCategory(): ?Category
     {
-        return $this->category;
+        return $this->id_category;
     }
 
     public function setIdCategory(?Category $id_category): static
     {
-        $this->category = $id_category;
+        $this->id_category = $id_category;
 
         return $this;
     }
 
     public function getIdEditor(): ?Editor
     {
-        return $this->editor;
+        return $this->id_editor;
     }
 
     public function setIdEditor(?Editor $id_editor): static
     {
-        $this->editor = $id_editor;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
+        $this->id_editor = $id_editor;
 
         return $this;
     }

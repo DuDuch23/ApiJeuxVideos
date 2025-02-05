@@ -14,13 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[ApiResource(
-    new Post(
-        uriTemplate: '/api/videogame',
-        controller: VideoGameController::class,
-        security: "is_granted('ROLE_USER')",
-    )
-)]
+#[ApiResource]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -43,15 +37,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, VideoGame>
-     */
-    #[ORM\OneToMany(targetEntity: VideoGame::class, mappedBy: 'user')]
-    private Collection $videogames;
-
     public function __construct()
     {
-        $this->videogames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,35 +114,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection<int, VideoGame>
-     */
-    public function getVideogames(): Collection
-    {
-        return $this->videogames;
-    }
-
-    public function addVideogame(VideoGame $videogame): static
-    {
-        if (!$this->videogames->contains($videogame)) {
-            $this->videogames->add($videogame);
-            $videogame->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeVideogame(VideoGame $videogame): static
-    {
-        if ($this->videogames->removeElement($videogame)) {
-            // set the owning side to null (unless already changed)
-            if ($videogame->getUser() === $this) {
-                $videogame->setUser(null);
-            }
-        }
-
-        return $this;
     }
 }
