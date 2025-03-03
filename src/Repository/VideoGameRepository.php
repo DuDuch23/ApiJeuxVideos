@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\VideoGame;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Traits\PaginateTrait;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<VideoGame>
@@ -15,6 +16,19 @@ class VideoGameRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, VideoGame::class);
     }
+
+    use PaginateTrait;
+
+    public function findByReleaseDate(\DateTime $startDate, \DateTime $endDate)
+{
+    return $this->createQueryBuilder('v')
+        ->where('v.releaseDate BETWEEN :startDate AND :endDate')
+        ->setParameter('startDate', $startDate)
+        ->setParameter('endDate', $endDate)
+        // Assure-toi que l'ordre est spécifié ici, si nécessaire
+        ->getQuery()
+        ->getResult();
+}
 
     //    /**
     //     * @return VideoGame[] Returns an array of VideoGame objects

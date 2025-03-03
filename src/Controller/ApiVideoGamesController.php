@@ -16,15 +16,20 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route('/api/videogame')]
 #[IsGranted('ROLE_USER')]
 class ApiVideoGamesController extends AbstractController
 {
     #[Route('', name: 'api_video_game_index', methods: ['GET'])]
-    public function index(VideoGameRepository $videoGameRepository, SerializerInterface $serializer): JsonResponse
+    public function index(VideoGameRepository $videoGameRepository, SerializerInterface $serializer, Request $request
+    ): JsonResponse
     {
-        $videoGames = $videoGameRepository->findAll();
+        $page = $request->get('page', 1);
+        $limit = $request->get('limit', 5);
+
+        $videoGames = $videoGameRepository->findAllWithPagination($page, $limit);
         
         $json = $serializer->serialize($videoGames, 'json', [
             'groups' => 'videogame:read'
@@ -82,8 +87,8 @@ class ApiVideoGamesController extends AbstractController
                 'title' => $videoGame->getTitle(),
                 'releaseDate' => $videoGame->getReleaseDate(),
                 'description' => $videoGame->getDescription(),
-                'editor' => $videoGame->getIdEditor(),
-                'category' => $videoGame->getIdCategory(),
+                'editor' => $videoGame->getEditor(),
+                'category' => $videoGame->getCategory(),
             ],
             UrlGeneratorInterface::ABS_URL
         );
@@ -116,8 +121,8 @@ class ApiVideoGamesController extends AbstractController
                 'title' => $updateVideoGame->getTitle(),
                 'releaseDate' => $updateVideoGame->getReleaseDate(),
                 'description' => $updateVideoGame->getDescription(),
-                'category' => $updateVideoGame->getIdCategory(),
-                'editor' => $updateVideoGame->getIdEditor(),
+                'category' => $updateVideoGame->getCategory(),
+                'editor' => $updateVideoGame->getEditor(),
         ],
             UrlGeneratorInterface::ABS_URL
         );
@@ -128,8 +133,9 @@ class ApiVideoGamesController extends AbstractController
     #[Route('/{id}', name: 'api_video_game_delete', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(VideoGame $videoGame,
-    EntityManagerInterface $em): JsonResponse
+    EntityManagerInterface $em, TagAwareCacheInterface $cachePool): JsonResponse
     {
+        $cachePool->invalidateTags(["videoGameCache"]);
         $em->remove($videoGame);
         $em->flush();
 

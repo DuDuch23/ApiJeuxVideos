@@ -167,11 +167,11 @@ class VideoGameFixtures extends Fixture
 
             $categoryReference = $attributes['categorie'];
             $category = $this->getReference($categoryReference, Category::class);
-            $videoGame->setIdCategory($category);
+            $videoGame->setCategory($category);
 
             $editorReference = $attributes['editor'];
             $editor = $this->getReference($editorReference, Editor::class);
-            $videoGame->setIdEditor($editor);
+            $videoGame->setEditor($editor);
 
             $manager->persist($videoGame);
         }

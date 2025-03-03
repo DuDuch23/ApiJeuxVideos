@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Editor;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Traits\PaginateTrait;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Editor>
@@ -15,6 +16,8 @@ class EditorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Editor::class);
     }
+
+    use PaginateTrait;
 
     //    /**
     //     * @return Editor[] Returns an array of Editor objects

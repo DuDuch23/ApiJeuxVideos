@@ -21,10 +21,13 @@ class ApiEditorController extends AbstractController
 {
     #[Route('', name: 'api_editor_index', methods: ['GET'])]
     public function index(EditorRepository $editorRepository,
-    SerializerInterface $serializer): JsonResponse
+    SerializerInterface $serializer, Request $request): JsonResponse
     {
-        $editor = $editorRepository->findAll();
-        $json = $serializer->serialize($editor, 'json', ['groups' => 'editor:read']);
+        $page = $request->get('page', 1);
+        $limit = $request->get('limit', 5);
+
+        $editors = $editorRepository->findAllWithPagination($page, $limit);
+        $json = $serializer->serialize($editors, 'json', ['groups' => 'editor:read']);
 
         return new JsonResponse($json, Response::HTTP_OK, [], true);
     }

@@ -21,10 +21,13 @@ class ApiCategoryController extends AbstractController
 {
     #[Route('', name: 'api_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepositoryGameRepository,
-    SerializerInterface $serializer): JsonResponse
+    SerializerInterface $serializer, Request $request): JsonResponse
     {
-        $category = $categoryRepositoryGameRepository->findAll();
-        $json = $serializer->serialize($category, 'json', ['groups' => 'category:read']);
+        $page = $request->get('page', 1);
+        $limit = $request->get('limit', 5);
+
+        $categories = $categoryRepositoryGameRepository->findAllWithPagination($page, $limit);
+        $json = $serializer->serialize($categories, 'json', ['groups' => 'category:read']);
 
         return new JsonResponse($json, Response::HTTP_OK, [], true);
     }
