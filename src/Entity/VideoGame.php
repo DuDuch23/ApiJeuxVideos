@@ -15,28 +15,30 @@ class VideoGame
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['video_game:read'])]
+    #[Groups(['videogame:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['video_game:read'])]
+    #[Groups(['videogame:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['video_game:read'])]
+    #[Groups(['videogame:read'])]
     private ?\DateTime $releaseDate = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['video_game:read'])]
+    #[Groups(['videogame:read'])]
     private ?string $description = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Category::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Category $id_category = null;
+    #[Groups(['videogame:read', 'category:read'])]
+    private ?Category $category = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Editor::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Editor $id_editor = null;
+    #[Groups(['videogame:read', 'editor:read'])]
+    private ?Editor $editor = null;
 
     public function getId(): ?int
     {
@@ -81,24 +83,24 @@ class VideoGame
 
     public function getIdCategory(): ?Category
     {
-        return $this->id_category;
+        return $this->category;
     }
 
-    public function setIdCategory(?Category $id_category): static
+    public function setIdCategory(?Category $category): static
     {
-        $this->id_category = $id_category;
+        $this->category = $category;
 
         return $this;
     }
 
     public function getIdEditor(): ?Editor
     {
-        return $this->id_editor;
+        return $this->editor;
     }
 
-    public function setIdEditor(?Editor $id_editor): static
+    public function setIdEditor(?Editor $editor): static
     {
-        $this->id_editor = $id_editor;
+        $this->editor = $editor;
 
         return $this;
     }
