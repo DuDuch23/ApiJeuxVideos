@@ -48,61 +48,8 @@ composer require nelmio/api-doc-bundle
 générer ses clés privée et public :
 php bin/console lexik:jwt:generate-keypair
 
-Se connecter sur postman :
-- Méthode = POST,
-- Authorization = No Auth
-- Body -> raw :
-{
-    "username": "email",
-    "password": "your_password"
-}
+Lancer la commande des newsletters:
+symfony console send-newsletter
 
--> Obtention d'un token
-
-
-----
-----
-
-
-Récupérer les jeux vidéos :
-- Lien : https://127.0.0.1:8000/api/videogame
-- Méthode = GET,
-- Authorization = Bearer Token (renseigner le token obtenu précédemment)
-
--> Obtention des jeux vidéos
-
-
-----
-----
-
-
-Récupérer les catégories :
-- Lien : https://127.0.0.1:8000/api/category
-- Méthode = GET,
-- Authorization = Bearer Token (renseigner le token obtenu précédemment)
-
--> Obtention des catégories
-
-
-----
-----
-
-
-Récupérer les éditeurs :
-- Lien : https://127.0.0.1:8000/api/editor
-- Méthode = GET,
-- Authorization = Bearer Token (renseigner le token obtenu précédemment)
-
--> Obtention des éditeurs
-
-
-----
-----
-
-
-Récupérer les jeux vidéos :
-- Lien : https://127.0.0.1:8000/api/videogame
-- Méthode = GET,
-- Authorization = Bearer Token (renseigner le token obtenu précédemment)
-
--> Obtention des jeux vidéos
+Lancer le cron pour envoyer un mail tout les lundis à 8h30:
+php bin/console messenger:consume

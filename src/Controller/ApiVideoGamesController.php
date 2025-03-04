@@ -64,7 +64,7 @@ class ApiVideoGamesController extends AbstractController
             $editor = $editorRepository->find($request->request->get("editor_id"));
     
             if ($editor) {
-                $videoGame->setIdEditor($editor);
+                $videoGame->setEditor($editor);
                 $em->persist($videoGame);
                 $em->flush();
             }
@@ -74,7 +74,7 @@ class ApiVideoGamesController extends AbstractController
             $category = $categoryRepository->find($request->request->get("category_id"));
     
             if ($category) {
-                $videoGame->setIdCategory($category);
+                $videoGame->setCategory($category);
                 $em->persist($videoGame);
                 $em->flush();
             }

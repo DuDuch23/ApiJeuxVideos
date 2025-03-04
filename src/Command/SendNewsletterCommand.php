@@ -4,12 +4,14 @@ namespace App\Command;
 
 use App\Repository\UserRepository;
 use App\Repository\VideoGameRepository;
+use App\Service\MailerService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Scheduler\Attribute\AsCronTask;
 use Symfony\Component\Serializer\SerializerInterface;
 use Twig\Environment;
 
@@ -17,22 +19,22 @@ use Twig\Environment;
     name: 'send-newsletter',
     description: 'Commande permettant d\'envoyer aux utilisateurs ayant souscris un abonnement à la newsletter, un email',
 )]
+#[AsCronTask('30 8 * * 1')]
 class SendNewsletterCommand extends Command
 {
     private $userRepository;
-    private $mailer;
+    private $mailerService;
     private $videoGameRepository;
-    private $serializer;
-    private $twig;
 
-    public function __construct(UserRepository $userRepository, MailerInterface $mailer, VideoGameRepository $videoGameRepository, SerializerInterface $serializer, Environment $twig)
-    {
+    public function __construct(
+        UserRepository $userRepository,
+        VideoGameRepository $videoGameRepository,
+        MailerService $mailerService
+    ) {
         parent::__construct();
         $this->userRepository = $userRepository;
-        $this->mailer = $mailer;
         $this->videoGameRepository = $videoGameRepository;
-        $this->serializer = $serializer;
-        $this->twig = $twig;
+        $this->mailerService = $mailerService;
     }
 
     protected function configure(): void
@@ -49,18 +51,13 @@ class SendNewsletterCommand extends Command
         $endDate = (new \DateTime())->add(new \DateInterval('P7D'));
         $upcomingGames = $this->videoGameRepository->findByReleaseDate($now, $endDate);
 
-        $emailContent = $this->twig->render('emails/newsletter.html.twig', [
-            'upcomingGames' => $upcomingGames,
-        ]);
-
         foreach ($subscribedUsers as $user) {
-            $email = (new Email())
-                ->from('alexduduch77@gmail.com')
-                ->to($user->getEmail())
-                ->subject('Newsletter - Nouveaux jeux vidéo à venir')
-                ->html($emailContent);
-
-            $this->mailer->send($email);
+            $this->mailerService->sendEmail(
+                $user->getEmail(),
+                'Newsletter - Nouveaux jeux vidéo à venir',
+                'emails/newsletter.html.twig',
+                ['upcomingGames' => $upcomingGames]
+            );
         }
 
         $output->writeln('Les emails ont été envoyés.');
